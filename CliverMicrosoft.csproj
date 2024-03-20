@@ -8,7 +8,7 @@
 	  <Copyright>Sergiy Stoyan</Copyright>
 	  <Authors>Sergiy Stoyan</Authors>
 	  <Company>CliverSoft</Company>
-	  <Version>3.3.2</Version>
+	  <Version>3.3.3</Version>
 	  <PackageProjectUrl>https://github.com/sergiystoyan/CliverMicrosoft</PackageProjectUrl>
 	  <Description>Routines based on Microsoft.Graph</Description>
 	  <PackageTags>Microsoft.Graph</PackageTags>

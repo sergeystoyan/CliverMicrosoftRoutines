@@ -151,40 +151,37 @@ namespace Cliver
                 if (cs != CheckStatus.CheckedOut && throwExceptionIfFailed)
                     throw new Exception(Cliver.Log.GetThisMethodName() + " failed on the file:\r\n" + DriveItem.WebUrl + "\r\nCheck status of the file: " + cs.ToString());
 
-                //if (cs != CheckStatus.CheckedOut)
-                //{//get who keeps it open (for Excel sheets):                    
-                //    DriveItem di = GetDriveItem(null, "activities");
-                //    Log.Debug0(di.AdditionalData.ToStringByJson());
-
-                //    Log.Debug0(SharepointIds.ToStringByJson());
-                //    //Log.Debug0(ListItem.SharepointIds.ToStringByJson());
-
-                //    object activities = di.AdditionalData["activities"];
-                //    Log.Debug0(activities.GetType().ToString());
-                //    Log.Debug0(ListItem.AdditionalData.ToStringByJson());
-
-
-                //    var t = Task.Run(() =>
-                //    {!!!GetActivitiesByInterval gives not user names
-                //        return OneDrive.Client.Me.Drives[DriveId].Items[ItemId].GetActivitiesByInterval(DateTime.Now.AddMinutes(-20).ToString("yyyy-MM-dd hh:mm:ss"), DateTime.Now.AddMinutes(2).ToString("yyyy-MM-dd hh:mm:ss"), "hour").Request().GetAsync();
-                //    }).Result;
-                //    Log.Debug0(t.ToStringByJson());
-
-                //    FieldValueSet fieldValueSet = Task.Run(() =>
-                //    {
-                //        var queryOptions = new List<QueryOption>() { new QueryOption("expand", "activities") };
-                //        return OneDrive.Client.Sites[SharepointIds.SiteId].Lists[SharepointIds.ListItemId].Items[ItemId].Fields.Request(queryOptions).GetAsync();
-                //    }).Result;//!!!The problem seems to be because of missing oAuth permissions for Sites on the client.
-                //    Log.Debug0(fieldValueSet.AdditionalData.ToStringByJson());
-
-                //    //ItemActivityStat itemActivityStat = (ItemActivityStat)di.AdditionalData["activities"];
-                //    //who keeps it open??? 
-                //    //itemActivityStat.
-
-                //    if (throwExceptionIfFailed)
-                //        throw new Exception(Cliver.Log.GetThisMethodName() + " failed on the file:\r\n" + DriveItem.WebUrl + "\r\nCheck status of the file: " + cs.ToString());
-                //}
                 return cs;
+            }
+
+            List<string> GetCurrentEditors()
+            {
+                //get who keeps it open (for Excel sheets):                    
+                DriveItem di = GetDriveItem(null, "activities");
+                Log.Debug0(di.AdditionalData.ToStringByJson());
+
+                Log.Debug0(SharepointIds.ToStringByJson());
+                //Log.Debug0(ListItem.SharepointIds.ToStringByJson());
+
+                object activities = di.AdditionalData["activities"];
+                Log.Debug0(activities.GetType().ToString());
+                Log.Debug0(ListItem.AdditionalData.ToStringByJson());
+
+                var t = Task.Run(() =>
+                {
+                    //!!!GetActivitiesByInterval gives not user names
+                    return OneDrive.Client.Me.Drives[DriveId].Items[ItemId].GetActivitiesByInterval(DateTime.Now.AddMinutes(-20).ToString("yyyy-MM-dd hh:mm:ss"), DateTime.Now.AddMinutes(2).ToString("yyyy-MM-dd hh:mm:ss"), "hour").Request().GetAsync();
+                }).Result;
+                Log.Debug0(t.ToStringByJson());
+
+                FieldValueSet fieldValueSet = Task.Run(() =>
+                {
+                    var queryOptions = new List<QueryOption>() { new QueryOption("expand", "activities") };
+                    return OneDrive.Client.Sites[SharepointIds.SiteId].Lists[SharepointIds.ListItemId].Items[ItemId].Fields.Request(queryOptions).GetAsync();
+                }).Result;//!!!The problem seems to be because of missing oAuth permissions for Sites on the client.
+                Log.Debug0(fieldValueSet.AdditionalData.ToStringByJson());
+
+                return new List<string> { "test" };
             }
 
             /// <summary>
