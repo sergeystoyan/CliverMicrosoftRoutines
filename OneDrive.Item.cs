@@ -12,6 +12,7 @@ using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using Microsoft.Graph.Drives.Item.Items;
 
 namespace Cliver
 {
@@ -76,16 +77,16 @@ namespace Cliver
             }
             DriveItem driveItem = null;
 
-            public IDriveItemRequestBuilder DriveItemRequestBuilder
+            public Microsoft.Graph.Drives.Item.Items.Item.DriveItemItemRequestBuilder DriveItemRequestBuilder
             {
                 get
                 {
-                    if (driveItemRequestBuilder == null)
-                        driveItemRequestBuilder = OneDrive.Client.Me.Drives[DriveId].Items[ItemId];
-                    return driveItemRequestBuilder;
+                    if (itemRequestBuilder == null)
+                        itemRequestBuilder = OneDrive.Client.Drives[DriveId].Items[ItemId];
+                    return itemRequestBuilder;
                 }
             }
-            IDriveItemRequestBuilder driveItemRequestBuilder;
+            Microsoft.Graph.Drives.Item.Items.Item.DriveItemItemRequestBuilder itemRequestBuilder;
 
             public enum LinkRoles
             {
@@ -134,7 +135,7 @@ namespace Cliver
 
                 DriveItem parentDriveItem = Task.Run(() =>
                 {
-                    return OneDrive.Client.Me.Drives[DriveId].Items[DriveItem.ParentReference.Id].Request().GetAsync();
+                    return OneDrive.Client.Drives[DriveId].Items[DriveItem.ParentReference.Id].GetAsync();
                 }).Result;
 
                 if (parentDriveItem == null)
@@ -146,7 +147,7 @@ namespace Cliver
             {
                 Task.Run(() =>
                 {
-                    DriveItemRequestBuilder.Request().DeleteAsync();
+                    DriveItemRequestBuilder.DeleteAsync();
                 }).Wait();
             }
 
@@ -188,7 +189,7 @@ namespace Cliver
             {
                 IDriveItemSearchCollectionPage driveItems = Task.Run(() =>
                 {
-                    return OneDrive.Client.Me.Drives[DriveId].Items[ItemId].Search(pattern).Request().GetAsync();
+                    return OneDrive.Client.Drives[DriveId].Items[ItemId].Search(pattern).Request().GetAsync();
                 }).Result;
 
                 foreach (DriveItem item in driveItems)
